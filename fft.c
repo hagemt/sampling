@@ -55,9 +55,10 @@ fft (input, len, output)
 	fft_t * FFT_RESTRICT output;
 {
 	/* check that length is a power of two */
-	if ((0 < len) && ((len & (~len + 1)) == len)) {
+	if (len && (len & (~len + 1)) == len) {
 		__fft(input, len, 1, output);
 		return EXIT_SUCCESS;
 	}
+	LOGE("%lu (length for FFT must be power of two)", (long unsigned) (len));
 	return EXIT_FAILURE;
 }
