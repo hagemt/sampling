@@ -1,6 +1,9 @@
-#include "composer.h"
+#include <ao/ao.h>
 
-static ao_sample_format format = {
+#include "audio.h"
+#include "utilities.h"
+
+ao_sample_format format = {
 	FORMAT_BITS,
 	FORMAT_RATE,
 	FORMAT_CHANNELS,
@@ -10,15 +13,15 @@ static ao_sample_format format = {
 void
 play_sampled (char *data, size_t len)
 {
-	ao_device *device = ao_open_live(DEVICE, &format, NULL);
+	ao_device *device = ao_open_live(DEFAULT, &format, NULL);
 	if (!device) {
-		LOGE("%i (count not open audio device)", DEVICE);
+		LOGE("%p (could not open audio device)", (void *) (device));
 		return;
 	}
 	if (!ao_play(device, data, len)) {
-		LOGE("%p (device could not play samples)", (void *) (device));
+		LOGE("%p (device could not play sample)", (void *) (device));
 	}
 	if (!ao_close(device)) {
-		LOGW("%p (cannot ao_close device)", (void *) (device));
+		LOGW("%p (could not close audio device)", (void *) (device));
 	}
 }

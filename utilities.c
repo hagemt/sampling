@@ -4,7 +4,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "composer.h"
+#include <ao/ao.h>
+
+#include "utilities.h"
 
 void
 __log_print (int code, const char *tag, const char *fmt, ...)
@@ -28,7 +30,7 @@ __log_print (int code, const char *tag, const char *fmt, ...)
 
 
 inline int
-__fetch_driver (void)
+__default_driver (void)
 {
 	int id = ao_default_driver_id();
 	if (id < 0) { id = 0; }

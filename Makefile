@@ -5,19 +5,18 @@
 
 ## commands
 
-TAG := "composer"
+TAG := composer
 SAY := $(shell which echo) -e "[$(TAG)]"
 RM  := $(shell which rm) -vf
-CC  := $(shell which cc)
-LD  := $(shell which ld)
+CC  := $(shell which gcc)
 
 ## flags
 
 CFLAGS_DEBUG   := -O0 -g -pedantic
 CFLAGS_RELEASE := -O3 -DNDEBUG
 
-CFLAGS  := -Wall -Wextra -c
-LDFLAGS := -lc -lm -lao
+CFLAGS  := -Wall -Wextra -fPIC $(CFLAGS_RELEASE)
+LDLIBS  := -lc -lm -lao
 
 ## project files
 
@@ -29,28 +28,30 @@ OBJECTS = $(SOURCES:.c=.o)
 ## phony targets
 
 all: $(TAG)
-	@$(SAY) build '$(TAG)' project
+	@$(SAY) built '$(TAG)' project
+	@$(SAY) run './$(TAG)' for fun!
 
 clean:
 	$(RM) *.gch
 	$(RM) *.o
+	$(RM) $(TAG)
 
 help:
-	@$(SAY) try the '$(TAG)' target
+	@$(SAY) build the '$(TAG)' target
 
 # TODO doc target(s), etc.
 .PHONY: all clean help
 
 ## generic targets
 
-%.o : %.c
-	$(CC) $(CFLAGS) $+ -o $@
+%.c : %.h
 
-%.c : composer.h
+%.o : %.c
+	$(CC) $(CFLAGS) -c $+ -o $@
 
 ## specific targets
 
 $(TAG): $(OBJECTS)
-	$(LD) $(LDFLAGS) $+ -o $@
+	$(CC) $(CFLAGS) $+ $(LDLIBS) -o $@
 
-# TODO any libs
+# TODO any libs?
